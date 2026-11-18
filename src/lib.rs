@@ -151,7 +151,7 @@ fn fetch_cached(cache_dir: &std::path::Path, filename: &str, asset: &str) -> PyR
     std::fs::create_dir_all(cache_dir)
         .map_err(|e| PyRuntimeError::new_err(format!("cannot create cache dir: {e}")))?;
     let url =
-        format!("https://github.com/cnmoro/faster-paddle/releases/download/v{VERSION}/{asset}");
+        format!("https://github.com/Subham-Maity/faster-paddle/releases/download/v{VERSION}/{asset}");
     let resp = ureq::get(&url).call().map_err(|e| {
         PyRuntimeError::new_err(format!("failed to download medium model from {url}: {e}"))
     })?;
