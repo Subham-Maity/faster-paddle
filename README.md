@@ -1,5 +1,56 @@
 # faster-paddle
 
+> [!NOTE]
+> **Fork Maintained by Subham Maity**: [github.com/Subham-Maity/faster-paddle](https://github.com/Subham-Maity/faster-paddle)  
+> This fork is independently maintained for production document & receipt extraction pipelines. It updates repository metadata, routes medium-model release assets to this fork, and provides dedicated CI/CD wheel builds.
+
+---
+
+## 🚀 Using this Fork in Your Projects
+
+### Option 1: Direct Install via Git (Recommended)
+```bash
+pip install git+https://github.com/Subham-Maity/faster-paddle.git
+```
+
+### Option 2: Pre-compiled Wheels via GitHub Actions (Zero Compile Time on VPS)
+Because this repository includes `.github/workflows/CI.yml`, GitHub Actions automatically compiles native wheels for Linux (x86_64, aarch64), Windows, and macOS whenever a tag is pushed.
+
+To trigger an automated build of Linux/Windows wheels:
+```bash
+git tag v1.0.5
+git push origin v1.0.5
+```
+Download the compiled `.whl` from GitHub Actions Artifacts or Releases and install directly without needing Rust or build tools on your target VPS:
+```bash
+pip install faster_paddle-1.0.5-cp38-abi3-manylinux_2_34_x86_64.whl
+```
+
+### Option 3: Local Offline Wheel (For Docker / Air-gapped VPS)
+Store the compiled wheel inside a `./vendor/` folder in your project repository so your VPS installs it completely offline:
+```dockerfile
+COPY vendor/faster_paddle-1.0.5-*.whl /tmp/
+RUN pip install /tmp/faster_paddle-1.0.5-*.whl
+```
+
+---
+
+## 🛠️ Changes in v1.0.5 (Fork Updates)
+1. **Repository Routing:** Updated metadata, homepage, and repository references to `https://github.com/Subham-Maity/faster-paddle`.
+2. **Version Bump:** Bumped crate and package version from `1.0.4` to `1.0.5`.
+3. **Asset Release Routing:** Updated `src/lib.rs` line 154 to route medium-model downloads from `Subham-Maity/faster-paddle/releases`.
+4. **CI/CD Integration:** Ready for automated multi-platform wheel generation via GitHub Actions.
+
+---
+
+## 💡 Production Best Practices for Receipts & Invoices
+* **Model Choice:** Use `model_size="small"` (~0.40s per image) for retail bills and invoices. The `tiny` model (~0.14s) occasionally misreads currency symbols (`₹`) as digits (`3`).
+* **Memory Requirements:** Measured peak RAM is **~633 MB** for `small` and **~288 MB** for `tiny`. Deploy on a **2 GB RAM VPS** for safe headroom.
+* **Preprocessing:** Use `deskew=False` for clean digital app screenshots (Swiggy, Zepto, Blinkit). Only set `deskew=True` for camera photos of paper bills with angle tilt.
+* **Arithmetic Verification:** Always verify `sum(Line Items) == Subtotal` and `Subtotal + Fees - Discounts == Grand Total` in code before trusting OCR totals.
+
+---
+
 **Fast, CPU-only OCR in Rust with Python bindings** — a self-contained
 reimplementation of PaddleOCR's PP-OCRv6 detection + recognition pipeline
 powered by [ONNX Runtime](https://onnxruntime.ai/).
